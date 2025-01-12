@@ -379,28 +379,37 @@ class ItemController extends Controller
     {
         $categories = DB::table('category')->get();
         $categoryName = Str::title(str_replace('-', ' ', $category_slug));
-
-        $items = DB::table('item')
+    
+        $query = DB::table('item')
             ->join('category', 'item.category_ID', '=', 'category.category_ID')
             ->leftJoin('reviews', 'item.item_ID', '=', 'reviews.item_id')
             ->select(
-                'item.*', 
-                'category.name as category_name', 
+                'item.*',
+                'category.name as category_name',
                 'category.type as category_type',
                 DB::raw('COUNT(reviews.id) as review_count'),
                 DB::raw('AVG(reviews.rating) as avg_rating')
             )
-            ->where('category.name', $categoryName)
             ->groupBy('item.item_ID')
-            ->orderByDesc('review_count') 
-            ->paginate(9);
-
+            ->orderByDesc('review_count');
+    
+        if ($category_slug == 'womenItems') {
+            $query->where('category.type', 'Womens');
+        } elseif ($category_slug == 'menItems') {
+            $query->where('category.type', 'Mens');
+        } else {
+            $query->where('category.name', $categoryName);
+        }
+    
+        $items = $query->paginate(9);
+    
         return view('Customer.shop.shopItems')->with([
             'categories' => $categories,
             'items' => $items,
             'categoryName' => $categoryName,
         ]);
     }
+    
 
     public function liveSearch(Request $request)
     {
