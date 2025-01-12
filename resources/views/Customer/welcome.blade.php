@@ -179,6 +179,8 @@
                                         <div class="product product-7 text-center">
                                             @php
                                                 $photos = json_decode($item->photo, true);
+                                                $averageRating = isset($item->average_rating) ? number_format($item->average_rating, 1) : 0; 
+                                                $reviewCount = $item->review_count ?? 0;
                                             @endphp
                                             <figure class="product-media">
                                                 <a href="/product/{{$item->item_ID}}">
@@ -202,10 +204,10 @@
                                                 </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div class="ratings">
-                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                                        <div class="ratings-val" style="width: {{ $averageRating * 20 }}%;"></div><!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 2 Reviews )</span>
-                                                </div><!-- End .rating-container -->
+                                                    <span class="ratings-text">({{ $reviewCount }} Reviews)</span>
+                                                </div><!-- End .ratings-container -->
 
                                                 <!-- <div class="product-nav product-nav-dots">
                                                     <a href="#" class="active" style="background: #d79442;"><span class="sr-only">Color name</span></a>
@@ -256,6 +258,8 @@
                                             <figure class="product-media">
                                             @php
                                                 $photos = json_decode($item->photo, true);
+                                                $averageRating = isset($item->average_rating) ? number_format($item->average_rating, 1) : 0; 
+                                                $reviewCount = $item->review_count ?? 0;
                                             @endphp
 
                                                 <a href="/product/{{$item->item_ID}}">
@@ -279,10 +283,10 @@
                                                 </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div class="ratings">
-                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                                        <div class="ratings-val" style="width: {{ $averageRating * 20 }}%;"></div><!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 2 Reviews )</span>
-                                                </div><!-- End .rating-container -->
+                                                    <span class="ratings-text">({{ $reviewCount }} Reviews)</span>
+                                                </div><!-- End .ratings-container -->
 
                                                 <!-- <div class="product-nav product-nav-dots">
                                                     <a href="#" class="active" style="background: #d79442;"><span class="sr-only">Color name</span></a>
@@ -326,6 +330,8 @@
                             @if( $item->category_type == "WearingItems")
                                     @php
                                         $photos = json_decode($item->photo, true);
+                                        $averageRating = isset($item->average_rating) ? number_format($item->average_rating, 1) : 0; 
+                                        $reviewCount = $item->review_count ?? 0;
                                     @endphp
                                 <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
                                     <div class="product product-7 text-center">
@@ -353,10 +359,10 @@
                                             </div><!-- End .product-price -->
                                             <div class="ratings-container">
                                                 <div class="ratings">
-                                                    <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                                    <div class="ratings-val" style="width: {{ $averageRating * 20 }}%;"></div><!-- End .ratings-val -->
                                                 </div><!-- End .ratings -->
-                                                <span class="ratings-text">( 4 Reviews )</span>
-                                            </div><!-- End .rating-container -->
+                                                <span class="ratings-text">({{ $reviewCount }} Reviews)</span>
+                                            </div><!-- End .ratings-container -->
                                         </div><!-- End .product-body -->
                                     </div><!-- End .product -->
                                 </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
