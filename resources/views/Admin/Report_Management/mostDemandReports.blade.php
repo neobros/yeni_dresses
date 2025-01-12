@@ -24,7 +24,7 @@
                         <i class="icon-arrow-right"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="/seller/itemManagement/reviewList">Report Details</a>
+                        <a href="/admin/reportManagement/reviewList">Report Details</a>
                     </li>
                 </ul>
             </div>
@@ -54,7 +54,34 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Date Range Picker -->
+            <form action="{{ route('admin.mostDemandReport') }}" method="GET">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <input 
+                            type="date" 
+                            name="start_date" 
+                            class="form-control" 
+                            value="{{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }}" 
+                            required
+                        >
+                    </div>
+                    <div class="col-md-4">
+                        <input 
+                            type="date" 
+                            name="end_date" 
+                            class="form-control" 
+                            value="{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}" 
+                            required
+                        >
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </div>
+            </form>
+
             <!-- Most Demanding Report Section -->
             <div class="row">
                 <div class="col-md-12">
@@ -77,6 +104,10 @@
                                 </ul>
                             </div>
 
+                            <p>
+                                <strong>Selected Date Range :</strong> {{ $startDate->format('Y-m-d') }} to {{ $endDate->format('Y-m-d') }}
+                            </p>
+
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -96,7 +127,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3">No data available</td>
+                                            <td colspan="4">No data available</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -117,6 +148,8 @@
 
 <script>
     const chartData = @json($chartData);
+    const startDate = @json($startDate->format('Y-m-d'));
+    const endDate = @json($endDate->format('Y-m-d'));
 
     var options = {
         series: chartData.values,
@@ -153,10 +186,16 @@
         });
     }
 
-   // Download Report 
+    // Download Report with Date Range
     function downloadReport() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("Most Demanding Report", 105, 20, null, null, 'center');
+
+        doc.setFontSize(12);
+        doc.text(`Date Range: ${startDate} to ${endDate}`, 105, 30, null, null, 'center');
 
         chart.dataURI().then(function (uri) {
             const chartWidth = document.querySelector("#apexChart").clientWidth;
@@ -164,28 +203,34 @@
 
             const scaleFactor = 180 / chartWidth; 
             const imgWidth = 180;
-            const imgHeight = chartHeight * scaleFactor; 
+            const imgHeight = chartHeight * scaleFactor;
 
-            doc.addImage(uri.imgURI, 'PNG', 10, 10, imgWidth, imgHeight);
+            doc.addImage(uri.imgURI, 'PNG', 10, 40, imgWidth, imgHeight);
 
             const table = document.querySelector('table');
-            doc.autoTable({ html: table, startY: imgHeight + 20 }); 
+            doc.autoTable({ html: table, startY: imgHeight + 50 });
 
-            doc.save('report.pdf');
+            doc.save('most_demanding_report.pdf');
         });
     }
 
-
-    // Download Table 
+    // Download Table Only
     function downloadTable() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("Most Demanding Report - Table Only", 105, 20, null, null, 'center');
+
+        doc.setFontSize(12);
+        doc.text(`Date Range: ${startDate} to ${endDate}`, 105, 30, null, null, 'center');
+
         const table = document.querySelector('table');
-        
-        doc.autoTable({ html: table });
+        doc.autoTable({ html: table, startY: 40 });
 
         doc.save('table_report.pdf');
     }
 </script>
+
 
 @endsection

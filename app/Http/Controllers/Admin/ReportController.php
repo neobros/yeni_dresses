@@ -14,30 +14,36 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
-    public function mostDemandReport()
+    public function mostDemandReport(Request $request)
     {
-        $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
-        ->with(['item' => function ($query) {
-            $query->select('item_ID', 'seller_ID', 'name')
-                ->with(['seller' => function ($subQuery) {
-                    $subQuery->select('id', 'name'); 
-                }]);
-        }])
+        $startDate = $request->get('start_date') 
+            ? Carbon::parse($request->get('start_date')) 
+            : Carbon::now()->startOfMonth();
+
+        $endDate = $request->get('end_date') 
+            ? Carbon::parse($request->get('end_date')) 
+            : Carbon::now();
+
+        $ratingsData = Review::whereBetween('created_at', [$startDate, $endDate])
+            ->select('item_id', DB::raw('COUNT(*) as ratings_count'))
+            ->with(['item' => function ($query) {
+                $query->select('item_ID', 'seller_ID', 'name')
+                    ->with(['seller' => function ($subQuery) {
+                        $subQuery->select('id', 'name');
+                    }]);
+            }])
             ->groupBy('item_id')
             ->orderBy('ratings_count', 'desc')
             ->get();
 
         $chartData = [
-            'labels' => $ratingsData->map(function ($review) {
-                return $review->item->name ?? 'Unknown Item'; 
-            }),
-            'values' => $ratingsData->map(function ($review) {
-                return $review->ratings_count;
-            }),
+            'labels' => $ratingsData->map(fn($review) => $review->item->name ?? 'Unknown Item'),
+            'values' => $ratingsData->map(fn($review) => $review->ratings_count),
         ];
 
-        return view('Admin.Report_Management.mostDemandReports', compact('ratingsData', 'chartData'));
+        return view('Admin.Report_Management.mostDemandReports', compact('ratingsData', 'chartData', 'startDate', 'endDate'));
     }
+
     public function leastDemandReport()
     {
         $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
