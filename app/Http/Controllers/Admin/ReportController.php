@@ -44,15 +44,24 @@ class ReportController extends Controller
         return view('Admin.Report_Management.mostDemandReports', compact('ratingsData', 'chartData', 'startDate', 'endDate'));
     }
 
-    public function leastDemandReport()
+    public function leastDemandReport(Request $request)
     {
+        $startDate = $request->get('start_date') 
+            ? Carbon::parse($request->get('start_date')) 
+            : Carbon::now()->startOfMonth();
+
+        $endDate = $request->get('end_date') 
+            ? Carbon::parse($request->get('end_date')) 
+            : Carbon::now();
+
         $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
-        ->with(['item' => function ($query) {
-            $query->select('item_ID', 'seller_ID', 'name')
-                ->with(['seller' => function ($subQuery) {
-                    $subQuery->select('id', 'name'); 
-                }]);
-        }])
+            ->with(['item' => function ($query) {
+                $query->select('item_ID', 'seller_ID', 'name')
+                    ->with(['seller' => function ($subQuery) {
+                        $subQuery->select('id', 'name'); 
+                    }]);
+            }])
+            ->whereBetween('created_at', [$startDate, $endDate]) // Filter by date range
             ->groupBy('item_id')
             ->orderBy('ratings_count', 'asc')
             ->get();
@@ -66,8 +75,10 @@ class ReportController extends Controller
             }),
         ];
 
-        return view('Admin.Report_Management.leastDemandReports', compact('ratingsData', 'chartData'));
+        return view('Admin.Report_Management.leastDemandReports', compact('ratingsData', 'chartData', 'startDate', 'endDate'));
     }
+
+
     public function incomeReport(Request $request)
     {
         $startDate = $request->start_date 

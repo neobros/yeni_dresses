@@ -55,7 +55,7 @@ Route::post('/admin/staffManagement/updateStaffDetails',   [App\Http\Controllers
 
 //ReportController
 Route::get('/admin/reports/mostDemandReport',              [App\Http\Controllers\admin\ReportController::class, 'mostDemandReport'])->name('admin.mostDemandReport');
-Route::get('/admin/reports/leastDemandReport',             [App\Http\Controllers\admin\ReportController::class, 'leastDemandReport']);
+Route::get('/admin/reports/leastDemandReport',             [App\Http\Controllers\admin\ReportController::class, 'leastDemandReport'])->name('admin.leastDemandReport');
 Route::get('/admin/reports/incomeReport',                  [App\Http\Controllers\admin\ReportController::class, 'incomeReport'])->name('seller.incomeReport');
 
 
