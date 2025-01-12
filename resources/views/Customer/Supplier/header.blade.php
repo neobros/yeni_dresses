@@ -5,10 +5,11 @@
           <div class="logo-header" data-background-color="dark">
             <a href="/" class="logo">
               <img
-                src="/admin/assets/img/kaiadmin/logo_light.svg"
+                src="/admin/assets/img/kaiadmin/logo_light.png"
                 alt="navbar brand"
                 class="navbar-brand"
-                height="20"
+                width="180"
+                height="50"
               />
             </a>
             <div class="nav-toggle">
