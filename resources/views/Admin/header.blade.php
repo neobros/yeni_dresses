@@ -634,13 +634,11 @@
                     href="#"
                     aria-expanded="false"
                   >
-                    <div class="avatar-sm">
-                      <img
-                        src="/admin/assets/img/profile.jpg"
-                        alt="..."
-                        class="avatar-img rounded-circle"
-                      />
-                    </div>
+                  <div class="avatar-sm">
+                      <div class="avatar-img rounded-circle d-flex justify-content-center align-items-center" style="background-color: #f5f5f5; width: 40px; height: 40px;">
+                          <i class="fas fa-user" style="font-size: 20px; color: #aaa;"></i>
+                      </div>
+                  </div>
                     <span class="profile-username">
                       <span class="op-7">Hi,</span>
                       <span class="fw-bold">{{ Auth::guard('admin')->user()->name }}</span>

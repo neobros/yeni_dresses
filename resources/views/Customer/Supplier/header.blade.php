@@ -3,7 +3,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a href="/" class="logo">
               <img
                 src="/admin/assets/img/kaiadmin/logo_light.svg"
                 alt="navbar brand"
@@ -450,16 +450,15 @@
                     href="#"
                     aria-expanded="false"
                   >
-                    <div class="avatar-sm">
-                      <img
-                        src="/admin/assets/img/profile.jpg"
-                        alt="..."
-                        class="avatar-img rounded-circle"
-                      />
-                    </div>
+                  <div class="avatar-sm">
+                      <div class="avatar-img rounded-circle d-flex justify-content-center align-items-center" style="background-color: #f5f5f5; width: 40px; height: 40px;">
+                          <i class="fas fa-user" style="font-size: 20px; color: #aaa;"></i>
+                      </div>
+                  </div>
+                
                     <span class="profile-username">
                       <span class="op-7">Hi,</span>
-                      <span class="fw-bold">Hizrian</span>
+                      <span class="fw-bold">{{ Auth::guard('customer')->user()->name }}</span>
                     </span>
                   </a>
                   <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -474,25 +473,14 @@
                             />
                           </div>
                           <div class="u-text">
-                            <h4>Hizrian</h4>
-                            <p class="text-muted">hello@example.com</p>
-                            <a
-                              href="profile.html"
-                              class="btn btn-xs btn-secondary btn-sm"
-                              >View Profile</a
-                            >
+                            <h4>{{ Auth::guard('customer')->user()->name }}</h4>
+                            <p class="text-muted">{{ Auth::guard('customer')->user()->email }}</p>
                           </div>
                         </div>
                       </li>
                       <li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">My Profile</a>
-                        <a class="dropdown-item" href="#">My Balance</a>
-                        <a class="dropdown-item" href="#">Inbox</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Account Setting</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item" href="/">Home</a>
                       </li>
                     </div>
                   </ul>
