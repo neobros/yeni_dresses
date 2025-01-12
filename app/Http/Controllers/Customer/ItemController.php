@@ -31,7 +31,6 @@ class ItemController extends Controller
         $inquiryDetails = collect();
         $reviews = collect();
 
-        // dd("hi",$itemDetails);
         if(Auth::guard('customer')->check())  
         {
             $cartDetails = DB::table('cart')->where('item_ID' , $item_ID)->where('user_ID' , Auth::guard('customer')->user()->id)->get();
