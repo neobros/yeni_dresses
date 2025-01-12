@@ -55,6 +55,33 @@
                 </div>
             </div>
             
+            <!-- Date Range Picker -->
+            <form action="{{ route('seller.mostDemandReport') }}" method="GET">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <input 
+                            type="date" 
+                            name="start_date" 
+                            class="form-control" 
+                            value="{{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }}" 
+                            required
+                        >
+                    </div>
+                    <div class="col-md-4">
+                        <input 
+                            type="date" 
+                            name="end_date" 
+                            class="form-control" 
+                            value="{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}" 
+                            required
+                        >
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </div>
+            </form>
+            
             <!-- Most Demanding Report Section -->
             <div class="row">
                 <div class="col-md-12">
@@ -76,7 +103,10 @@
                                     <li><a class="dropdown-item" href="#" onclick="downloadTable()">Download Table Only</a></li>
                                 </ul>
                             </div>
-
+                            <tr>
+                                <td><strong>Selected Date Range : </strong></td>
+                                <td>{{ $startDate->format('Y-m-d') }} to {{ $endDate->format('Y-m-d') }}</td>
+                            </tr>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -152,9 +182,18 @@
     }
 
    // Download Report 
-    function downloadReport() {
+   function downloadReport() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+
+        doc.setFontSize(18); 
+        doc.text("Most Demanding Report", 105, 20, null, null, 'center'); 
+
+        doc.setFontSize(12);
+        doc.text(`Date Range: {{ $startDate->format('Y-m-d') }} to {{ $endDate->format('Y-m-d') }}`, 105, 30, null, null, 'center');
+
+        doc.setLineWidth(0.5);
+        doc.line(10, 35, 200, 35);
 
         chart.dataURI().then(function (uri) {
             const chartWidth = document.querySelector("#apexChart").clientWidth;
@@ -164,14 +203,19 @@
             const imgWidth = 180;
             const imgHeight = chartHeight * scaleFactor; 
 
-            doc.addImage(uri.imgURI, 'PNG', 10, 10, imgWidth, imgHeight);
+            doc.addImage(uri.imgURI, 'PNG', 10, 40, imgWidth, imgHeight);
 
             const table = document.querySelector('table');
-            doc.autoTable({ html: table, startY: imgHeight + 20 }); 
+            doc.autoTable({ 
+                html: table, 
+                startY: imgHeight + 50, 
+                margin: { top: 10 }
+            });
 
-            doc.save('report.pdf');
+            doc.save('most_demanding_report.pdf');
         });
     }
+
 
 
     // Download Table 

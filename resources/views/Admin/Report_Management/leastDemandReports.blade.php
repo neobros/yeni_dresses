@@ -1,8 +1,8 @@
-@extends('Customer.Supplier.head')
+@extends('Admin.head')
 @section('content')
 
 <div class="wrapper">
-    @include('Customer.Supplier.header')
+    @include('Admin.header')
 
     <div class="container">
         <div class="page-inner">
@@ -29,8 +29,7 @@
                 </ul>
             </div>
             
-            <!-- Date Range Picker -->
-            <form action="{{ route('seller.leastDemandReport') }}" method="GET">
+            <form action="{{ route('admin.leastDemandReport') }}" method="GET">
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <input 
@@ -78,13 +77,15 @@
                                 </ul>
                             </div>
 
-                            <!-- Date Range Information -->
-                            <p><strong>Selected Date Range :</strong> {{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }} to {{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}</p>
+                            <p>
+                                <strong>Selected Date Range :</strong> {{ $startDate->format('Y-m-d') }} to {{ $endDate->format('Y-m-d') }}
+                            </p>
 
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Seller Name</th>
                                         <th>Item Name</th>
                                         <th>Ratings Count</th>
                                     </tr>
@@ -93,12 +94,13 @@
                                     @forelse ($ratingsData as $index => $data)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
+                                            <td>{{ $data->item->seller->name ?? 'N/A' }}</td>
                                             <td>{{ $data->item->name ?? 'N/A' }}</td>
                                             <td>{{ $data->ratings_count }}</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3">No data available</td>
+                                            <td colspan="4">No data available</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -119,6 +121,8 @@
 
 <script>
     const chartData = @json($chartData);
+    const startDate = @json(request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')));
+    const endDate = @json(request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')));
 
     var options = {
         series: chartData.values,
@@ -146,20 +150,14 @@
     var chart = new ApexCharts(document.querySelector("#apexChart"), options);
     chart.render();
 
-    // Download Chart
-    function downloadChart() {
-        chart.dataURI().then(function (uri) {
-            const a = document.createElement('a');
-            a.href = uri.imgURI;
-            a.download = 'chart.png';
-            a.click();
-        });
-    }
-
-    // Download Full Report
     function downloadReport() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("Least Demanding Report", 105, 20, null, null, 'center');
+        doc.setFontSize(12);
+        doc.text(`Date Range: ${startDate} to ${endDate}`, 105, 30, null, null, 'center');
 
         chart.dataURI().then(function (uri) {
             const chartWidth = document.querySelector("#apexChart").clientWidth;
@@ -169,36 +167,37 @@
             const imgWidth = 180;
             const imgHeight = chartHeight * scaleFactor;
 
-            doc.addImage(uri.imgURI, 'PNG', 10, 10, imgWidth, imgHeight);
+            doc.addImage(uri.imgURI, 'PNG', 10, 40, imgWidth, imgHeight);
 
             const table = document.querySelector('table');
-            doc.autoTable({ html: table, startY: imgHeight + 20 });
+            doc.autoTable({ html: table, startY: imgHeight + 50 });
 
-            const startDate = "{{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }}";
-            const endDate = "{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}";
-
-            doc.setFontSize(12);
-            doc.text(`Date Range: ${startDate} to ${endDate}`, 10, imgHeight + 15);
-
-            doc.save('least_demand_report.pdf');
+            doc.save('least_demanding_report.pdf');
         });
     }
 
-    // Download Table Only
+    function downloadChart() {
+        chart.dataURI().then(function (uri) {
+            var a = document.createElement('a');
+            a.href = uri.imgURI;
+            a.download = 'chart.png';
+            a.click();
+        });
+    }
+
     function downloadTable() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        const table = document.querySelector('table');
 
-        doc.autoTable({ html: table });
-
-        const startDate = "{{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }}";
-        const endDate = "{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}";
-
+        doc.setFontSize(18);
+        doc.text("Least Demanding Report - Table Only", 105, 20, null, null, 'center');
         doc.setFontSize(12);
-        doc.text(`Date Range: ${startDate} to ${endDate}`, 10, 10);
+        doc.text(`Date Range: ${startDate} to ${endDate}`, 105, 30, null, null, 'center');
 
-        doc.save('least_demand_table.pdf');
+        const table = document.querySelector('table');
+        doc.autoTable({ html: table, startY: 40 });
+
+        doc.save('table_report.pdf');
     }
 </script>
 

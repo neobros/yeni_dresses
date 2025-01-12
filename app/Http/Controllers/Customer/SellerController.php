@@ -73,75 +73,49 @@ class SellerController extends Controller
     public function storeItem(Request $request)
     {
         $request->validate([
-            'category_ID'      => 'required',
-            'price'      => 'required',
-            'description'    => 'required',
-            'name'      => 'required|string|max:255',
-            'photo.*' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'photo' => 'required|array|min:4|min:4',
-            'quantity' => 'required|numeric|min:1',
-
+            'category_ID'   => 'required',
+            'price'         => 'required',
+            'description'   => 'required',
+            'name'          => 'required|string|max:255',
+            'photo.*'       => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'photo'         => 'required|array|min:4',
+            'quantity'      => 'required|numeric|min:1',
         ]);
 
-        $size = [];
+        $sizeJson = json_encode($request->input('sizes', []));
 
-        if($request->sizeS !== null)
-        {
-            $size[] = $request->sizeS;
-        }
-        if($request->sizeM !== null)
-        {
-            $size[] = $request->sizeM;
-        }
-        if($request->sizeL !== null)
-        {
-            $size[] = $request->sizeL;
-        }
-        if($request->sizeXL !== null)
-        {
-            $size[] = $request->sizeXL;
-        }
-        $sizeJson = json_encode($size);
-
-
-        try{
+        try {
             $filenames = [];
-
             foreach ($request->file('photo') as $image) {
-                $filename= date('YmdHi').$image->getClientOriginalName();
-                $image->move(public_path().'/uploads/', $filename); 
-                
+                $filename = date('YmdHi') . $image->getClientOriginalName();
+                $image->move(public_path('/uploads/'), $filename);
                 $filenames[] = $filename;
             }
 
             $filenamesJson = json_encode($filenames);
 
-            $images = new Item([
-                    'name' =>$request->name,
-                    'seller_ID' => Auth::guard('customer')->user()->id,
-                    'size' =>$sizeJson,
-                    'price' =>$request->price,
-                    'description' =>$request->description,
-                    'category_ID' =>$request->category_ID,
-                    'photo' =>$filenamesJson,
-                    'quantity' =>$request->quantity,
-                ]);
+            $item = new Item([
+                'name'          => $request->name,
+                'seller_ID'     => Auth::guard('customer')->user()->id,
+                'size'          => $sizeJson,
+                'price'         => $request->price,
+                'description'   => $request->description,
+                'category_ID'   => $request->category_ID,
+                'photo'         => $filenamesJson,
+                'quantity'      => $request->quantity,
+            ]);
 
-            $images->save();
-            
-            return redirect()
-            ->back()
-            ->with('success', 'New Item added successfully.');
+            $item->save();
 
-        }
-        catch(\Exception $error){
             return redirect()
-            ->back()
-            ->with('delete', 'Something goes wrong. Please try again.');
+                ->back()
+                ->with('success', 'New Item added successfully.');
+        } catch (\Exception $error) {
+            return redirect()
+                ->back()
+                ->with('delete', 'Something went wrong. Please try again.');
         }
-    
     }
-
 
     public function itemList()
     {
@@ -324,46 +298,72 @@ class SellerController extends Controller
         return view('Customer.Supplier.Item_Management.reviewList', compact('groupedReviews'));
     }
 
-    public function mostDemandReport()
+    public function mostDemandReport(Request $request)
     {
+        $sellerId = Auth::guard('customer')->user()->id;
+
+        $startDate = $request->start_date 
+            ? Carbon::parse($request->start_date) 
+            : Carbon::now()->startOfMonth();
+
+        $endDate = $request->end_date 
+            ? Carbon::parse($request->end_date) 
+            : Carbon::now();
+
         $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
+            ->where('seller_id', $sellerId)
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('item_id')
             ->orderBy('ratings_count', 'desc')
             ->get();
 
-        // Prepare the data for the chart
         $chartData = [
             'labels' => $ratingsData->map(function ($review) {
-                return $review->item->name ?? 'Unknown Item'; // Ensure you have item names here
+                return $review->item->name ?? 'Unknown Item'; 
             }),
             'values' => $ratingsData->map(function ($review) {
                 return $review->ratings_count;
             }),
         ];
 
-        return view('Customer.Supplier.Item_Management.mostDemandReports', compact('ratingsData', 'chartData'));
+        return view('Customer.Supplier.Item_Management.mostDemandReports', compact('ratingsData', 'chartData', 'startDate', 'endDate'));
     }
-    public function leastDemandReport()
+
+    public function leastDemandReport(Request $request)
     {
+        $sellerId = Auth::guard('customer')->user()->id;
+
+        $startDate = $request->start_date 
+            ? Carbon::parse($request->start_date) 
+            : Carbon::now()->startOfMonth();
+
+        $endDate = $request->end_date 
+            ? Carbon::parse($request->end_date) 
+            : Carbon::now();
+
         $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
+            ->where('seller_id', $sellerId)
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('item_id')
             ->orderBy('ratings_count', 'asc')
             ->get();
 
-        // Prepare the data for the chart
         $chartData = [
             'labels' => $ratingsData->map(function ($review) {
-                return $review->item->name ?? 'Unknown Item'; // Ensure you have item names here
+                return $review->item->name ?? 'Unknown Item';
             }),
             'values' => $ratingsData->map(function ($review) {
                 return $review->ratings_count;
             }),
         ];
 
-        return view('Customer.Supplier.Item_Management.leastDemandReports', compact('ratingsData', 'chartData'));
+        return view('Customer.Supplier.Item_Management.leastDemandReports', compact('ratingsData', 'chartData', 'startDate', 'endDate'));
     }
+
     public function incomeReport(Request $request)
     {
+        $sellerId = Auth::guard('customer')->user()->id;
+
         $startDate = $request->start_date 
             ? Carbon::parse($request->start_date) 
             : Carbon::now()->startOfMonth();
@@ -379,7 +379,10 @@ class SellerController extends Controller
             ->groupBy('order.item_ID', 'order.created_at')
             ->get();
         
-        $items = Item::whereIn('item_ID', $orders->pluck('item_ID'))->get()->keyBy('item_ID');
+            $items = Item::where('seller_ID', $sellerId)
+            ->whereIn('item_ID', $orders->pluck('item_ID'))
+            ->get()
+            ->keyBy('item_ID');
     
         $incomeData = $orders->map(function ($order) use ($items) {
             if (isset($items[$order->item_ID])) {
@@ -425,6 +428,5 @@ class SellerController extends Controller
             'values' => $values->values()->toArray(), 
         ];
     }
-    
     
 }

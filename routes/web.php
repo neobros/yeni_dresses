@@ -53,6 +53,11 @@ Route::get('/admin/deleteStaff/{id}',                      [App\Http\Controllers
 Route::get('/admin/staffManagement/updateStaff/{id}',      [App\Http\Controllers\Admin\StaffManagementController::class, 'updateStaff']);
 Route::post('/admin/staffManagement/updateStaffDetails',   [App\Http\Controllers\Admin\StaffManagementController::class, 'updateStaffDetails']);
 
+//ReportController
+Route::get('/admin/reports/mostDemandReport',              [App\Http\Controllers\admin\ReportController::class, 'mostDemandReport'])->name('admin.mostDemandReport');
+Route::get('/admin/reports/leastDemandReport',             [App\Http\Controllers\admin\ReportController::class, 'leastDemandReport'])->name('admin.leastDemandReport');
+Route::get('/admin/reports/incomeReport',                  [App\Http\Controllers\admin\ReportController::class, 'incomeReport'])->name('seller.incomeReport');
+
 
 });
 
@@ -87,9 +92,6 @@ Route::middleware('customer')->group(function () {
 //SellerController
 Route::get('/seller/registration',                          [App\Http\Controllers\Customer\SellerController::class, 'sellerRegistration']);
 Route::get('/seller/registrationAgreed',                    [App\Http\Controllers\Customer\SellerController::class, 'registrationAgreed']);
-Route::get('/seller/reports/mostDemandReport',              [App\Http\Controllers\Customer\SellerController::class, 'mostDemandReport']);
-Route::get('/seller/reports/leastDemandReport',             [App\Http\Controllers\Customer\SellerController::class, 'leastDemandReport']);
-Route::get('/seller/reports/incomeReport',                  [App\Http\Controllers\Customer\SellerController::class, 'incomeReport'])->name('seller.incomeReport');
 
 
 //ItemController
@@ -126,7 +128,9 @@ Route::post('/seller/itemManagement/updateItemDetails',     [App\Http\Controller
 Route::get('/seller/itemManagement/inquiries',              [App\Http\Controllers\Customer\SellerController::class, 'inquiries']);
 Route::post('/seller/itemManagement/saveReply',             [App\Http\Controllers\Customer\SellerController::class, 'saveReply'])->name('saveReply');
 Route::get('/seller/itemManagement/reviews',                [App\Http\Controllers\Customer\SellerController::class, 'reviews']);
-
+Route::get('/seller/reports/mostDemandReport',              [App\Http\Controllers\Customer\SellerController::class, 'mostDemandReport'])->name('seller.mostDemandReport');
+Route::get('/seller/reports/leastDemandReport',             [App\Http\Controllers\Customer\SellerController::class, 'leastDemandReport'])->name('seller.leastDemandReport');
+Route::get('/seller/reports/incomeReport',                  [App\Http\Controllers\Customer\SellerController::class, 'incomeReport'])->name('seller.incomeReport');
 
 });
 
