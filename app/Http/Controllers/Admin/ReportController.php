@@ -9,6 +9,7 @@ use DB;
 use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 
 class ReportController extends Controller
