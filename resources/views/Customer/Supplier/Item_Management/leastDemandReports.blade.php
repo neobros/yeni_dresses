@@ -29,33 +29,34 @@
                 </ul>
             </div>
             
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        @if (\Session::has('success'))
-                        <div class="alert alert-success">
-                            <strong>{{ \Session::get('success') }}</strong>
-                        </div>
-                        @endif
-                        @if (\Session::has('delete'))
-                        <div class="alert alert-danger">
-                            <strong>{{ \Session::get('delete') }}</strong>
-                        </div>
-                        @endif
-                        @if (count($errors) > 0)
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
+            <!-- Date Range Picker -->
+            <form action="{{ route('seller.leastDemandReport') }}" method="GET">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <input 
+                            type="date" 
+                            name="start_date" 
+                            class="form-control" 
+                            value="{{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }}" 
+                            required
+                        >
+                    </div>
+                    <div class="col-md-4">
+                        <input 
+                            type="date" 
+                            name="end_date" 
+                            class="form-control" 
+                            value="{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}" 
+                            required
+                        >
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Filter</button>
                     </div>
                 </div>
-            </div>
+            </form>
             
-            <!-- Most Demanding Report Section -->
+            <!-- Least Demanding Report Section -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -76,6 +77,9 @@
                                     <li><a class="dropdown-item" href="#" onclick="downloadTable()">Download Table Only</a></li>
                                 </ul>
                             </div>
+
+                            <!-- Date Range Information -->
+                            <p><strong>Selected Date Range :</strong> {{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }} to {{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}</p>
 
                             <table class="table table-bordered">
                                 <thead>
@@ -142,17 +146,17 @@
     var chart = new ApexCharts(document.querySelector("#apexChart"), options);
     chart.render();
 
-    // Download Chart 
+    // Download Chart
     function downloadChart() {
         chart.dataURI().then(function (uri) {
-            var a = document.createElement('a');
+            const a = document.createElement('a');
             a.href = uri.imgURI;
             a.download = 'chart.png';
             a.click();
         });
     }
 
-   // Download Report 
+    // Download Full Report
     function downloadReport() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -163,27 +167,38 @@
 
             const scaleFactor = 180 / chartWidth; 
             const imgWidth = 180;
-            const imgHeight = chartHeight * scaleFactor; 
+            const imgHeight = chartHeight * scaleFactor;
 
             doc.addImage(uri.imgURI, 'PNG', 10, 10, imgWidth, imgHeight);
 
             const table = document.querySelector('table');
-            doc.autoTable({ html: table, startY: imgHeight + 20 }); 
+            doc.autoTable({ html: table, startY: imgHeight + 20 });
 
-            doc.save('report.pdf');
+            const startDate = "{{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }}";
+            const endDate = "{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}";
+
+            doc.setFontSize(12);
+            doc.text(`Date Range: ${startDate} to ${endDate}`, 10, imgHeight + 15);
+
+            doc.save('least_demand_report.pdf');
         });
     }
 
-
-    // Download Table 
+    // Download Table Only
     function downloadTable() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         const table = document.querySelector('table');
-        
+
         doc.autoTable({ html: table });
 
-        doc.save('table_report.pdf');
+        const startDate = "{{ request()->get('start_date', \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d')) }}";
+        const endDate = "{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}";
+
+        doc.setFontSize(12);
+        doc.text(`Date Range: ${startDate} to ${endDate}`, 10, 10);
+
+        doc.save('least_demand_table.pdf');
     }
 </script>
 

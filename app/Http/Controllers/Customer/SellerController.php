@@ -355,26 +355,37 @@ class SellerController extends Controller
         return view('Customer.Supplier.Item_Management.mostDemandReports', compact('ratingsData', 'chartData', 'startDate', 'endDate'));
     }
 
-    public function leastDemandReport()
+    public function leastDemandReport(Request $request)
     {
         $sellerId = Auth::guard('customer')->user()->id;
+
+        $startDate = $request->start_date 
+            ? Carbon::parse($request->start_date) 
+            : Carbon::now()->startOfMonth();
+
+        $endDate = $request->end_date 
+            ? Carbon::parse($request->end_date) 
+            : Carbon::now();
+
         $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
             ->where('seller_id', $sellerId)
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('item_id')
             ->orderBy('ratings_count', 'asc')
             ->get();
 
         $chartData = [
             'labels' => $ratingsData->map(function ($review) {
-                return $review->item->name ?? 'Unknown Item'; 
+                return $review->item->name ?? 'Unknown Item';
             }),
             'values' => $ratingsData->map(function ($review) {
                 return $review->ratings_count;
             }),
         ];
 
-        return view('Customer.Supplier.Item_Management.leastDemandReports', compact('ratingsData', 'chartData'));
+        return view('Customer.Supplier.Item_Management.leastDemandReports', compact('ratingsData', 'chartData', 'startDate', 'endDate'));
     }
+
     public function incomeReport(Request $request)
     {
         $sellerId = Auth::guard('customer')->user()->id;
