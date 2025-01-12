@@ -27,9 +27,6 @@
                                     @endif</a></li>
                                 @endif
                                 
-                                    <li><a href="/about">About Us</a></li>
-                                    <li><a href="/contact">Contact Us</a></li>
-
                                     @if(Auth::guard('customer')->check())  
                                     <li><a href="/userDashboard" ><i class="icon-user"></i>{{Auth::guard('customer')->user()->name}}</a></li>
                                     <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-toggle="modal"><i class="icon-arrow-right"></i>Logout</a></li>
@@ -173,7 +170,8 @@
                                         </div><!-- End .row -->
                                     </div><!-- End .megamenu megamenu-md -->
                                 </li>
-                               
+                                <li><a href="/about">About Us</a></li>
+                                <li><a href="/contact">Contact Us</a></li>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
