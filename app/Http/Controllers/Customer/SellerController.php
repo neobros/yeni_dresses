@@ -326,15 +326,17 @@ class SellerController extends Controller
 
     public function mostDemandReport()
     {
+        $sellerId = Auth::guard('customer')->user()->id;
+
         $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
+            ->where('seller_id', $sellerId)
             ->groupBy('item_id')
             ->orderBy('ratings_count', 'desc')
             ->get();
 
-        // Prepare the data for the chart
         $chartData = [
             'labels' => $ratingsData->map(function ($review) {
-                return $review->item->name ?? 'Unknown Item'; // Ensure you have item names here
+                return $review->item->name ?? 'Unknown Item'; 
             }),
             'values' => $ratingsData->map(function ($review) {
                 return $review->ratings_count;
@@ -345,15 +347,16 @@ class SellerController extends Controller
     }
     public function leastDemandReport()
     {
+        $sellerId = Auth::guard('customer')->user()->id;
         $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
+            ->where('seller_id', $sellerId)
             ->groupBy('item_id')
             ->orderBy('ratings_count', 'asc')
             ->get();
 
-        // Prepare the data for the chart
         $chartData = [
             'labels' => $ratingsData->map(function ($review) {
-                return $review->item->name ?? 'Unknown Item'; // Ensure you have item names here
+                return $review->item->name ?? 'Unknown Item'; 
             }),
             'values' => $ratingsData->map(function ($review) {
                 return $review->ratings_count;
@@ -364,6 +367,8 @@ class SellerController extends Controller
     }
     public function incomeReport(Request $request)
     {
+        $sellerId = Auth::guard('customer')->user()->id;
+
         $startDate = $request->start_date 
             ? Carbon::parse($request->start_date) 
             : Carbon::now()->startOfMonth();
@@ -379,7 +384,10 @@ class SellerController extends Controller
             ->groupBy('order.item_ID', 'order.created_at')
             ->get();
         
-        $items = Item::whereIn('item_ID', $orders->pluck('item_ID'))->get()->keyBy('item_ID');
+            $items = Item::where('seller_ID', $sellerId)
+            ->whereIn('item_ID', $orders->pluck('item_ID'))
+            ->get()
+            ->keyBy('item_ID');
     
         $incomeData = $orders->map(function ($order) use ($items) {
             if (isset($items[$order->item_ID])) {
@@ -425,6 +433,5 @@ class SellerController extends Controller
             'values' => $values->values()->toArray(), 
         ];
     }
-    
     
 }

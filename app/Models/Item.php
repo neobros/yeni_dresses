@@ -22,4 +22,10 @@ class Item extends Model
         'seller_ID',
         'click_count'
     ];
+
+    public function seller()
+    {
+        return $this->belongsTo(Customer_seller::class, 'seller_ID', 'id'); 
+    }
+
 }

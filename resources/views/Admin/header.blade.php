@@ -103,7 +103,32 @@
                   </ul>
                 </div>
               </li>
-
+              <li class="nav-item @if(\Request::is('admin/reports*')) active submenu @endif">
+                <a data-bs-toggle="collapse" href="#sidebarReports">
+                    <i class="fas fa-chart-bar"></i>
+                    <p>Reports</p>
+                    <span class="caret"></span>
+                </a>
+                  <div class="collapse @if(\Request::is('admin/reports*')) active show @endif" id="sidebarReports">
+                      <ul class="nav nav-collapse">
+                          <li class="@if(\Request::is('admin/reports/mostDemandReport')) active @endif">
+                              <a href="/admin/reports/mostDemandReport">
+                                  <span class="sub-item">Most Demanding Report</span>
+                              </a>
+                          </li>
+                          <li class="@if(\Request::is('admin/reports/leastDemandReport')) active @endif">
+                              <a href="/admin/reports/leastDemandReport">
+                                  <span class="sub-item">Least Demanding Report</span>
+                              </a>
+                          </li>
+                          <li class="@if(\Request::is('admin/reports/incomeReport')) active @endif">
+                              <a href="/admin/reports/incomeReport">
+                                  <span class="sub-item">Income Report</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </div>
+              </li>
 
               <li class="nav-item   ">
                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
