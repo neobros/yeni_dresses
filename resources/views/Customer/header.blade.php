@@ -1,12 +1,6 @@
 <header class="header header-7">
             <div class="header-top">
                 <div class="container">
-                    <div class="header-left">
-                        <div class="header-dropdown">
-                            <a href="#">Lkr</a>
-                        </div><!-- End .header-dropdown -->
-
-                    </div><!-- End .header-left -->
 
                     <div class="header-right">
                         <ul class="top-menu">
@@ -148,12 +142,17 @@
                                                                 @endforeach    
                                                             </ul>
                                                             <div class="menu-title">Shop Pages</div><!-- End .menu-title -->
+                                                            <script>
+                                                                // Pass authentication status to JavaScript
+                                                                const isLoggedIn = @json(Auth::guard('customer')->check());
+                                                            </script>
                                                             <ul>
-                                                                <li><a href="cart.html">Cart</a></li>
-                                                                <li><a href="checkout.html">Checkout</a></li>
-                                                                <li><a href="/wishList">Wishlist</a></li>
-                                                                <li><a href="/userDashboard">My Account</a></li>
-                                                                <li><a href="#">Lookbook</a></li>
+                                                                <li>
+                                                                    <a href="javascript:void(0);" onclick="handleRedirect('/viewCart')">Cart</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:void(0);" onclick="handleRedirect('/wishList')">Wishlist</a>
+                                                                </li>
                                                             </ul>
                                                         </div><!-- End .col-md-6 -->
                                                     </div><!-- End .row -->
@@ -197,7 +196,7 @@
 
                             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">{{count($cartData)}}</span>
+                                <span class="cart-count">{{ count($cartData ?? []) }}</span>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right">
@@ -272,4 +271,22 @@
             footer: ''
             });
     }
+    
+    function handleRedirect(url) {
+    if (isLoggedIn) {
+        window.location.href = url;
+    } else {
+        Swal.fire({
+            title: 'Login Required',
+            text: 'Please log in first to access this page.',
+            icon: 'warning',
+            confirmButtonText: 'Log In'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#signin-modal').modal('show');
+            }
+        });
+    }
+}
+
 </script>
