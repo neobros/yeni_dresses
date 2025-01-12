@@ -112,6 +112,22 @@
                                   <input type="checkbox" name="sizeXL" value="XL" class="selectgroup-input">
                                   <span class="selectgroup-button">XL</span>
                                 </label>
+                                <label class="selectgroup-item">
+                                  <input type="checkbox" name="sizeXL" value="2XL" class="selectgroup-input">
+                                  <span class="selectgroup-button">2XL</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                  <input type="checkbox" name="sizeXL" value="3XL" class="selectgroup-input">
+                                  <span class="selectgroup-button">3XL</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                  <input type="checkbox" name="sizeXL" value="4XL" class="selectgroup-input">
+                                  <span class="selectgroup-button">4XL</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                  <input type="checkbox" name="sizeXL" value="5XL" class="selectgroup-input">
+                                  <span class="selectgroup-button">5XL</span>
+                                </label>
                               </div>
                             </div>
                         
@@ -208,7 +224,6 @@
             </div>    
           </div>
         </div>
-
         
 <link rel="stylesheet" href="/summernote/summernote-lite.min.css">
 
@@ -230,11 +245,10 @@
 
           // AJAX request to the backend
           $.ajax({
-              url: '/seller/itemManagement/getSubCategories',  // Your backend route
+              url: '/seller/itemManagement/getSubCategories', 
               type: 'GET',
               data: { category: mainCategory },
               success: function(response) {
-                  // Clear the subcategory dropdown
                   $('#subCategory').empty();
 
                   // Add new options from the response data
@@ -266,7 +280,7 @@ $(document).ready(function() {
 
         if (files.length > maxFiles) {
             alert("You can only upload a maximum of " + maxFiles + " images.");
-            $(this).val(''); // Clear the file input
+            $(this).val(''); 
             return;
         }
 
@@ -286,6 +300,21 @@ $(document).ready(function() {
         });
     });
 });
+</script>
+<script>
+  $(document).ready(function() {
+      $('#mainCategory').change(function() {
+          var selectedCategory = $(this).val();
+
+          if (selectedCategory === 'WearingItems') {
+              $('.form-group:has(.selectgroup)').hide(); 
+          } else {
+              $('.form-group:has(.selectgroup)').show(); 
+          }
+      });
+
+      $('#mainCategory').trigger('change');
+  });
 </script>
 
 <style>
