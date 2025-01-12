@@ -14,6 +14,7 @@ use App\Models\Review;
 use App\Models\Wishlist;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ItemController extends Controller
 {
@@ -375,6 +376,33 @@ class ItemController extends Controller
         }
 
         return redirect()->back()->with('error', 'Failed to remove the item. Please try again.');
+    }
+
+    public function showCategory($category_slug)
+    {
+        $categories = DB::table('category')->get();
+        $categoryName = Str::title(str_replace('-', ' ', $category_slug));
+
+        $items = DB::table('item')
+            ->join('category', 'item.category_ID', '=', 'category.category_ID')
+            ->leftJoin('reviews', 'item.item_ID', '=', 'reviews.item_id')
+            ->select(
+                'item.*', 
+                'category.name as category_name', 
+                'category.type as category_type',
+                DB::raw('COUNT(reviews.id) as review_count'),
+                DB::raw('AVG(reviews.rating) as avg_rating')
+            )
+            ->where('category.name', $categoryName)
+            ->groupBy('item.item_ID')
+            ->orderByDesc('review_count') 
+            ->paginate(9);
+
+        return view('Customer.shop.shopItems')->with([
+            'categories' => $categories,
+            'items' => $items,
+            'categoryName' => $categoryName,
+        ]);
     }
 
 }

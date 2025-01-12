@@ -731,7 +731,7 @@
                             confirmButtonText: 'Log In'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                $('#signin-modal').modal('show'); // Show login modal
+                                $('#signin-modal').modal('show'); 
                             }
                         });
                     } else {
