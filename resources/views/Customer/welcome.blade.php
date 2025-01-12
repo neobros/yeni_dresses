@@ -597,8 +597,8 @@
                             }
                         }'>
                         <blockquote class="testimonial testimonial-icon text-center">
-                            <p class="lead">“Really great store”</p><!-- End .lead -->
-                            <p>“ Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra<br>a, ultricies in, diam. Sed arcu. ”</p>
+                            <p class="lead">“Absolutely amazing experience!”</p><!-- End .lead -->
+                            <p>“ I rented a gorgeous evening gown for my friend's wedding, and I felt like a queen. The fit was perfect, and the process was so easy.<br>I'll definitely be back.”</p>
 
                             <cite>
                                 Charly Smith,
