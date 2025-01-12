@@ -79,6 +79,9 @@ Route::get('/product/{id}',                                 [App\Http\Controller
 Route::post('/product/{id}/inquiry',                        [App\Http\Controllers\Customer\ItemController::class, 'inquiryStore'])->name('product.inquiry.store');
 Route::post('/product/{item_ID}/{seller_ID}/review', [App\Http\Controllers\Customer\ItemController::class, 'storeReview'])->name('product.review.store');
 
+Route::get('/{category_slug}',                     [App\Http\Controllers\Customer\ItemController::class, 'showCategory']);
+
+
 Route::middleware('customer')->group(function () {
 //SellerController
 Route::get('/seller/registration',                          [App\Http\Controllers\Customer\SellerController::class, 'sellerRegistration']);
@@ -99,7 +102,6 @@ Route::post('/pay',                                         [App\Http\Controller
 Route::post('/addToWishlist',                               [App\Http\Controllers\Customer\ItemController::class, 'addToWishlist']);
 Route::get('/wishList',                                     [App\Http\Controllers\Customer\ItemController::class, 'viewWishList']);
 Route::get('/removeWishlistItems/{id}',                     [App\Http\Controllers\Customer\ItemController::class, 'removeWishlistItems']);
-
 
 
 
