@@ -403,4 +403,22 @@ class ItemController extends Controller
         ]);
     }
 
+    public function liveSearch(Request $request)
+    {
+        $query = $request->input('q');
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $items = DB::table('item')
+            ->where('name', 'like', '%' . $query . '%')
+            ->orWhere('description', 'like', '%' . $query . '%')
+            ->select('item_ID', 'name', 'price', 'photo')
+            ->take(10) 
+            ->get();
+
+        return response()->json($items);
+    }
+
 }
