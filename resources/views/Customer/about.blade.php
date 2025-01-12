@@ -6,11 +6,6 @@
     @include('Customer.header')
 
     <main class="main">
-        	<div class="page-header text-center" style="background-image: url('/customer/assets/images/about/about-2/img-1.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">About us<span>Pages</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
@@ -21,6 +16,14 @@
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
 
+            <div class="container">
+                <div class="page-header page-header-big text-center"
+                    style="background-image: url('/customer/assets/images/about/about-2/img-1.jpg')">
+                    <h1 class="page-title text-white">About us<span class="text-white">Pages</span>
+                    </h1>
+                </div><!-- End .page-header -->
+            </div><!-- End .container -->
+            
             <div class="page-content pb-3">
                 <div class="container">
                     <div class="row">
