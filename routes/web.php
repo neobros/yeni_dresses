@@ -79,7 +79,7 @@ Route::get('/product/{id}',                                 [App\Http\Controller
 Route::post('/product/{id}/inquiry',                        [App\Http\Controllers\Customer\ItemController::class, 'inquiryStore'])->name('product.inquiry.store');
 Route::post('/product/{item_ID}/{seller_ID}/review', [App\Http\Controllers\Customer\ItemController::class, 'storeReview'])->name('product.review.store');
 
-Route::get('/{category_slug}',                     [App\Http\Controllers\Customer\ItemController::class, 'showCategory']);
+Route::get('/shop/{category_slug}',                     [App\Http\Controllers\Customer\ItemController::class, 'showCategory']);
 
 
 Route::middleware('customer')->group(function () {

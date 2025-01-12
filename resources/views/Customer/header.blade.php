@@ -117,7 +117,7 @@
                                                             <ul> 
                                                                 @foreach($categories as $item)
                                                                    @if($item->type == "Womens")
-                                                                    <li><a href="/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
+                                                                    <li><a href="/shop/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
                                                                    @endif
                                                                 @endforeach                       
                                                             </ul>
@@ -126,7 +126,7 @@
                                                             <ul>
                                                                @foreach($categories as $item)
                                                                    @if($item->type == "Mens")
-                                                                    <li><a href="/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
+                                                                    <li><a href="/shop/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
                                                                    @endif
                                                                 @endforeach         
                                                             </ul>
@@ -137,7 +137,7 @@
                                                             <ul>
                                                                 @foreach($categories as $item)
                                                                     @if($item->type == "WearingItems")
-                                                                        <li><a href="/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
+                                                                        <li><a href="/shop/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
                                                                     @endif
                                                                 @endforeach    
                                                             </ul>
