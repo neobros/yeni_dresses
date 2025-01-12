@@ -77,11 +77,21 @@
                                 <h4 class="widget-title">Useful links</h4><!-- End .widget-title -->
 
                                 <ul class="widget-list">
-                                    <li><a href="about.html">About Molla</a></li>
-                                    <li><a href="#">How to shop on Molla</a></li>
-                                    <li><a href="faq.html">FAQ</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
-                                    <li><a href="login.html">Log in</a></li>
+                                    <li><a href="/about">About Yeni Dresses</a></li>
+                                    <li><a href="/contact">Contact us</a></li>
+                                    @if(Auth::guard('customer')->check())  
+                                    <li><a href="/userDashboard" ><i></i>{{Auth::guard('customer')->user()->name}}</a></li>
+                                    <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-toggle="modal"><i></i>Logout</a></li>
+
+                                    
+                                    <form id="logout-form" action="/logout/customer" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+
+                          
+                                    @else
+                                    <li><a href="#signin-modal" data-toggle="modal"><i></i>Login</a></li>
+                                    @endif
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-4 col-lg-2 -->
