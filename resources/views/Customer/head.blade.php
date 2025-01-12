@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>Yeni Dresses</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -77,11 +77,21 @@
                                 <h4 class="widget-title">Useful links</h4><!-- End .widget-title -->
 
                                 <ul class="widget-list">
-                                    <li><a href="about.html">About Molla</a></li>
-                                    <li><a href="#">How to shop on Molla</a></li>
-                                    <li><a href="faq.html">FAQ</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
-                                    <li><a href="login.html">Log in</a></li>
+                                    <li><a href="/about">About Yeni Dresses</a></li>
+                                    <li><a href="/contact">Contact us</a></li>
+                                    @if(Auth::guard('customer')->check())  
+                                    <li><a href="/userDashboard" ><i></i>{{Auth::guard('customer')->user()->name}}</a></li>
+                                    <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-toggle="modal"><i></i>Logout</a></li>
+
+                                    
+                                    <form id="logout-form" action="/logout/customer" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+
+                          
+                                    @else
+                                    <li><a href="#signin-modal" data-toggle="modal"><i></i>Login</a></li>
+                                    @endif
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-4 col-lg-2 -->
@@ -137,7 +147,7 @@
 
             <div class="footer-bottom">
                 <div class="container-fluid">
-                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+                    <p class="footer-copyright">©2025 Yeni Dresses. All Rights Reserved.</p><!-- End .footer-copyright -->
                     <ul class="footer-menu">
                         <li><a href="#">Terms Of Use</a></li>
                         <li><a href="#">Privacy Policy</a></li>

@@ -27,9 +27,6 @@
                                     @endif</a></li>
                                 @endif
                                 
-                                    <li><a href="/about">About Us</a></li>
-                                    <li><a href="/contact">Contact Us</a></li>
-
                                     @if(Auth::guard('customer')->check())  
                                     <li><a href="/userDashboard" ><i class="icon-user"></i>{{Auth::guard('customer')->user()->name}}</a></li>
                                     <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-toggle="modal"><i class="icon-arrow-right"></i>Logout</a></li>
@@ -117,7 +114,7 @@
                                                             <ul> 
                                                                 @foreach($categories as $item)
                                                                    @if($item->type == "Womens")
-                                                                    <li><a href="/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
+                                                                    <li><a href="/shop/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
                                                                    @endif
                                                                 @endforeach                       
                                                             </ul>
@@ -126,7 +123,7 @@
                                                             <ul>
                                                                @foreach($categories as $item)
                                                                    @if($item->type == "Mens")
-                                                                    <li><a href="/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
+                                                                    <li><a href="/shop/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
                                                                    @endif
                                                                 @endforeach         
                                                             </ul>
@@ -137,7 +134,7 @@
                                                             <ul>
                                                                 @foreach($categories as $item)
                                                                     @if($item->type == "WearingItems")
-                                                                        <li><a href="/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
+                                                                        <li><a href="/shop/{{ Str::slug($item->name) }}">{{$item->name}}</a></li>
                                                                     @endif
                                                                 @endforeach    
                                                             </ul>
@@ -173,7 +170,8 @@
                                         </div><!-- End .row -->
                                     </div><!-- End .megamenu megamenu-md -->
                                 </li>
-                               
+                                <li><a href="/about">About Us</a></li>
+                                <li><a href="/contact">Contact Us</a></li>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
@@ -181,14 +179,16 @@
                     <div class="header-right">
                         <div class="header-search header-search-extended header-search-visible">
                             <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper search-wrapper-wide">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
-                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                                </div><!-- End .header-search-wrapper -->
-                            </form>
-                        </div><!-- End .header-search -->
+                            <div class="header-search-wrapper search-wrapper-wide position-relative">
+                                <label for="q" class="sr-only">Search</label>
+                                <input type="search" class="form-control" name="q" id="live-search-input" placeholder="Search product ..." required>
+                                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                                <div id="live-search-results" class="dropdown-menu" style="display: none; position: absolute; width: 100%;">
+                                    <!-- Results will be appended here -->
+                                </div>
+                            </div>
+                        </div>
+                        
                         
                         <div class="dropdown cart-dropdown">
 
@@ -288,5 +288,77 @@
         });
     }
 }
-
 </script>
+<script>
+    $(document).ready(function () {
+        $('#live-search-input').on('keyup', function () {
+            let query = $(this).val();
+
+            if (query.length > 2) {
+                $.ajax({
+                    url: '{{ route("live.search") }}',
+                    method: 'GET',
+                    data: { q: query },
+                    success: function (data) {
+                        let results = $('#live-search-results');
+                        results.empty();
+
+                        if (data.length > 0) {
+                            data.forEach(item => {
+                                let photo = JSON.parse(item.photo)[0]; // Assuming photo is a JSON string
+                                results.append(`
+                                    <a href="/product/${item.item_ID}" class="dropdown-item d-flex align-items-center">
+                                        <img src="/uploads/${photo}" alt="${item.name}" style="width: 50px; height: 50px; margin-right: 10px;">
+                                        <div>
+                                            <span>${item.name}</span>
+                                            <small class="d-block text-muted">Rs ${item.price}.00</small>
+                                        </div>
+                                    </a>
+                                `);
+                            });
+                            results.show();
+                        } else {
+                            results.append('<p class="dropdown-item">No results found</p>');
+                            results.show();
+                        }
+                    }
+                });
+            } else {
+                $('#live-search-results').hide();
+            }
+        });
+
+        // Hide dropdown when clicking outside
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#live-search-input, #live-search-results').length) {
+                $('#live-search-results').hide();
+            }
+        });
+    });
+</script>
+<style>
+    #live-search-results {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+    #live-search-results a {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        text-decoration: none;
+        color: #333;
+    }
+
+    #live-search-results a:hover {
+        background: #f8f8f8;
+    }
+
+    #live-search-results img {
+        border-radius: 5px;
+    }
+</style>

@@ -115,8 +115,6 @@ class ItemController extends Controller
         $cartData = DB::table('cart')->join('item', 'cart.item_ID', '=', 'item.item_ID')->where('cart.user_ID' , Auth::guard('customer')->user()->id)
         ->select('cart.*', 'item.*', 'cart.size as cartSize' , 'cart.quantity as cartQuantity' , 'item.quantity as itemQuantity' )->get();
 
-
-
         return view('Customer.viewCart')->with([
             'categories'  =>  $categories, 
             'cartData'  =>  $cartData, 
@@ -403,6 +401,24 @@ class ItemController extends Controller
             'items' => $items,
             'categoryName' => $categoryName,
         ]);
+    }
+
+    public function liveSearch(Request $request)
+    {
+        $query = $request->input('q');
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $items = DB::table('item')
+            ->where('name', 'like', '%' . $query . '%')
+            ->orWhere('description', 'like', '%' . $query . '%')
+            ->select('item_ID', 'name', 'price', 'photo')
+            ->take(10) 
+            ->get();
+
+        return response()->json($items);
     }
 
 }

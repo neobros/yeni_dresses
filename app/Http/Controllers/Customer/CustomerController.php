@@ -19,26 +19,53 @@ class CustomerController extends Controller
     {
         $categories = DB::table('category')->get();
 
-        $items = DB::table('item')->join('category', 'item.category_ID', '=', 'category.category_ID')->select('item.*', 'category.name as category_name' , 'category.type as category_type' )->get();
-        
-        $cartData = null ;
-        $wishlistCount = null ;
+        $items = DB::table('item')
+            ->join('category', 'item.category_ID', '=', 'category.category_ID')
+            ->leftJoin('reviews', 'item.item_ID', '=', 'reviews.item_id')
+            ->select(
+                'item.*',
+                'category.name as category_name',
+                'category.type as category_type',
+                DB::raw('COUNT(reviews.id) as review_count'),
+                DB::raw('AVG(reviews.rating) as average_rating') // Calculate average rating
+            )
+            ->groupBy(
+                'item.item_ID',
+                'category.name',
+                'category.type',
+                'item.name',
+                'item.price',
+                'item.description',
+                'item.photo',
+                'item.size',
+                'item.quantity',
+                'item.created_at',
+                'item.updated_at',
+                'item.seller_ID'
+            ) // Include all grouped columns
+            ->orderByDesc('review_count') // Order by review count (highest first)
+            ->get();
 
-        if(Auth::guard('customer')->check())  
-        {
-            
-            $cartData = DB::table('cart')->join('item', 'cart.item_ID', '=', 'item.item_ID')->where('cart.user_ID' , Auth::guard('customer')->user()->id)->get();
+        $cartData = null;
+        $wishlistCount = null;
+
+        if (Auth::guard('customer')->check()) {
+            $cartData = DB::table('cart')
+                ->join('item', 'cart.item_ID', '=', 'item.item_ID')
+                ->where('cart.user_ID', Auth::guard('customer')->user()->id)
+                ->get();
+
             $wishlistCount = Wishlist::where('user_ID', Auth::guard('customer')->user()->id)->count();
-
         }
 
         return view('Customer.welcome')->with([
-            'categories'  =>  $categories, 
-            'items'  =>  $items, 
-            'cartData'  =>  $cartData, 
+            'categories' => $categories,
+            'items' => $items,
+            'cartData' => $cartData,
             'wishlistCount' => $wishlistCount,
         ]);
     }
+
 
     public function login(Request $request)
     {
