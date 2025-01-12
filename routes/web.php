@@ -128,7 +128,7 @@ Route::post('/seller/itemManagement/updateItemDetails',     [App\Http\Controller
 Route::get('/seller/itemManagement/inquiries',              [App\Http\Controllers\Customer\SellerController::class, 'inquiries']);
 Route::post('/seller/itemManagement/saveReply',             [App\Http\Controllers\Customer\SellerController::class, 'saveReply'])->name('saveReply');
 Route::get('/seller/itemManagement/reviews',                [App\Http\Controllers\Customer\SellerController::class, 'reviews']);
-Route::get('/seller/reports/mostDemandReport',              [App\Http\Controllers\Customer\SellerController::class, 'mostDemandReport']);
+Route::get('/seller/reports/mostDemandReport',              [App\Http\Controllers\Customer\SellerController::class, 'mostDemandReport'])->name('seller.mostDemandReport');
 Route::get('/seller/reports/leastDemandReport',             [App\Http\Controllers\Customer\SellerController::class, 'leastDemandReport']);
 Route::get('/seller/reports/incomeReport',                  [App\Http\Controllers\Customer\SellerController::class, 'incomeReport'])->name('seller.incomeReport');
 
