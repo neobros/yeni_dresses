@@ -20,7 +20,6 @@ class ItemController extends Controller
 {
     public function productPage($item_ID)
     {
-        // Update the click count
         $this->updateItemCount($item_ID);
 
         $categories = DB::table('category')->get();
@@ -32,6 +31,7 @@ class ItemController extends Controller
         $inquiryDetails = collect();
         $reviews = collect();
 
+        // dd("hi",$itemDetails);
         if(Auth::guard('customer')->check())  
         {
             $cartDetails = DB::table('cart')->where('item_ID' , $item_ID)->where('user_ID' , Auth::guard('customer')->user()->id)->get();
@@ -56,9 +56,9 @@ class ItemController extends Controller
                 DB::raw('COUNT(reviews.id) as reviews_count'),
                 DB::raw('COALESCE(AVG(reviews.rating), 0) as rating_percentage')
             )
-            ->groupBy('item.item_ID') // Group by product ID to calculate aggregates
-            ->orderBy('item.click_count', 'desc') // Sort by click count
-            ->take(10) // Limit to top 10
+            ->groupBy('item.item_ID') 
+            ->orderBy('item.click_count', 'desc') 
+            ->take(10) 
             ->get();
             // dd("highRateProducts",$highRateProducts);
 

@@ -73,75 +73,49 @@ class SellerController extends Controller
     public function storeItem(Request $request)
     {
         $request->validate([
-            'category_ID'      => 'required',
-            'price'      => 'required',
-            'description'    => 'required',
-            'name'      => 'required|string|max:255',
-            'photo.*' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'photo' => 'required|array|min:4|min:4',
-            'quantity' => 'required|numeric|min:1',
-
+            'category_ID'   => 'required',
+            'price'         => 'required',
+            'description'   => 'required',
+            'name'          => 'required|string|max:255',
+            'photo.*'       => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'photo'         => 'required|array|min:4',
+            'quantity'      => 'required|numeric|min:1',
         ]);
 
-        $size = [];
+        $sizeJson = json_encode($request->input('sizes', []));
 
-        if($request->sizeS !== null)
-        {
-            $size[] = $request->sizeS;
-        }
-        if($request->sizeM !== null)
-        {
-            $size[] = $request->sizeM;
-        }
-        if($request->sizeL !== null)
-        {
-            $size[] = $request->sizeL;
-        }
-        if($request->sizeXL !== null)
-        {
-            $size[] = $request->sizeXL;
-        }
-        $sizeJson = json_encode($size);
-
-
-        try{
+        try {
             $filenames = [];
-
             foreach ($request->file('photo') as $image) {
-                $filename= date('YmdHi').$image->getClientOriginalName();
-                $image->move(public_path().'/uploads/', $filename); 
-                
+                $filename = date('YmdHi') . $image->getClientOriginalName();
+                $image->move(public_path('/uploads/'), $filename);
                 $filenames[] = $filename;
             }
 
             $filenamesJson = json_encode($filenames);
 
-            $images = new Item([
-                    'name' =>$request->name,
-                    'seller_ID' => Auth::guard('customer')->user()->id,
-                    'size' =>$sizeJson,
-                    'price' =>$request->price,
-                    'description' =>$request->description,
-                    'category_ID' =>$request->category_ID,
-                    'photo' =>$filenamesJson,
-                    'quantity' =>$request->quantity,
-                ]);
+            $item = new Item([
+                'name'          => $request->name,
+                'seller_ID'     => Auth::guard('customer')->user()->id,
+                'size'          => $sizeJson,
+                'price'         => $request->price,
+                'description'   => $request->description,
+                'category_ID'   => $request->category_ID,
+                'photo'         => $filenamesJson,
+                'quantity'      => $request->quantity,
+            ]);
 
-            $images->save();
-            
-            return redirect()
-            ->back()
-            ->with('success', 'New Item added successfully.');
+            $item->save();
 
-        }
-        catch(\Exception $error){
             return redirect()
-            ->back()
-            ->with('delete', 'Something goes wrong. Please try again.');
+                ->back()
+                ->with('success', 'New Item added successfully.');
+        } catch (\Exception $error) {
+            return redirect()
+                ->back()
+                ->with('delete', 'Something went wrong. Please try again.');
         }
-    
     }
-
 
     public function itemList()
     {

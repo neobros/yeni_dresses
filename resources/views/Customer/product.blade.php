@@ -109,41 +109,43 @@
                                             </a>
                                         </div>
                                     </div> -->
-
                                     <div class="details-filter-row details-row-size">
                                         <label for="size">Size:</label>
                                         <div class="select-custom">
-                                            <select name="size" id="size" class="form-control">
-                                                <option value="" selected="selected">Select a size</option>
-                                            @php
-                                                $sizeData = json_decode($itemDetails->size, true);
-                                            @endphp    
-                                               @foreach($sizeData as $data)
-
-                                                    @if($data == "S")
-                                                    <option value="S">Small</option>
-                                                    @endif
-
-                                                    @if($data == "M")
-                                                    <option value="M">Medium</option>
-                                                    @endif
-
-                                                    @if($data == "L")
-                                                    <option value="L">Large</option>
-                                                    @endif
-
-                                                    @if($data == "XL")
-                                                    <option value="XL">Extra Large</option>
-                                                    @endif
-                                                      
-                                               @endforeach
-                                               
-                                            </select>
+                                            @if($itemDetails->category_type !== 'WearingItems') {{-- Check if the category type is not "Wearing Items" --}}
+                                                <select name="size" id="size" class="form-control">
+                                                    <option value="" selected="selected">Select a size</option>
+                                                    @php
+                                                        $sizeMapping = [
+                                                            'S' => 'Small',
+                                                            'M' => 'Medium',
+                                                            'L' => 'Large',
+                                                            'XL' => 'Extra Large',
+                                                            '2XL' => '2X Large',
+                                                            '3XL' => '3X Large',
+                                                            '4XL' => '4X Large',
+                                                            '5XL' => '5X Large',
+                                                        ];
+                                    
+                                                        $sizeData = json_decode($itemDetails->size, true);
+                                                    @endphp
+                                    
+                                                    @foreach($sizeData as $data)
+                                                        @if(array_key_exists($data, $sizeMapping))
+                                                            <option value="{{ $data }}">{{ $sizeMapping[$data] }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <span>Size selection is not applicable for Wearing Items.</span>
+                                            @endif
                                         </div><!-- End .select-custom -->
-
-                                        <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
+                                        
+                                        @if($itemDetails->category_type !== 'WearingItems')
+                                            <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
+                                        @endif
                                     </div><!-- End .details-filter-row -->
-
+                                    
                                     <div class="details-filter-row details-row-size">
                                         <label for="qty">Qty:</label>
                                         <div class="product-details-quantity">  
@@ -154,7 +156,7 @@
                                     <div class="product-details-action">
                                     @if(Auth::guard('customer')->check())  
                                        @if(Auth::guard('customer')->user()->id == $itemDetails->seller_ID)
-                                            <a   href="javascript:void(0);"  class="btn-product btn-cart"><span>Your Product</span></a>
+                                            <a   href="javascript:void(0);"  class="btn-product btn-cart"><span>It's Your Product</span></a>
                                        @else
                                            <!-- If the item is already in the cart -->
                                             @if(count($cartDetails) > 0)
@@ -163,7 +165,6 @@
                                                 <!-- Add to Cart Button -->
                                                 <a href="javascript:void(0);" onclick="addToCart({{ $itemDetails->item_ID }} , this)" class="btn-product btn-cart"><span>Add to Cart</span></a>
                                             @endif
-
                                             
                                             <!-- Wishlist Button -->
                                             <div class="details-action-wrapper">

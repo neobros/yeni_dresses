@@ -96,42 +96,40 @@
                             <div class="form-group form-inline">
                               <label class="col-md-3 col-form-label">Size</label>
                               <div class="selectgroup w-100">
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeS" value="S" class="selectgroup-input">
-                                  <span class="selectgroup-button">S</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeM" value="M" class="selectgroup-input">
-                                  <span class="selectgroup-button">M</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeL" value="L" class="selectgroup-input">
-                                  <span class="selectgroup-button">L</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeXL" value="XL" class="selectgroup-input">
-                                  <span class="selectgroup-button">XL</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeXL" value="2XL" class="selectgroup-input">
-                                  <span class="selectgroup-button">2XL</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeXL" value="3XL" class="selectgroup-input">
-                                  <span class="selectgroup-button">3XL</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeXL" value="4XL" class="selectgroup-input">
-                                  <span class="selectgroup-button">4XL</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                  <input type="checkbox" name="sizeXL" value="5XL" class="selectgroup-input">
-                                  <span class="selectgroup-button">5XL</span>
-                                </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="S" class="selectgroup-input">
+                                      <span class="selectgroup-button">S</span>
+                                  </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="M" class="selectgroup-input">
+                                      <span class="selectgroup-button">M</span>
+                                  </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="L" class="selectgroup-input">
+                                      <span class="selectgroup-button">L</span>
+                                  </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="XL" class="selectgroup-input">
+                                      <span class="selectgroup-button">XL</span>
+                                  </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="2XL" class="selectgroup-input">
+                                      <span class="selectgroup-button">2XL</span>
+                                  </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="3XL" class="selectgroup-input">
+                                      <span class="selectgroup-button">3XL</span>
+                                  </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="4XL" class="selectgroup-input">
+                                      <span class="selectgroup-button">4XL</span>
+                                  </label>
+                                  <label class="selectgroup-item">
+                                      <input type="checkbox" name="sizes[]" value="5XL" class="selectgroup-input">
+                                      <span class="selectgroup-button">5XL</span>
+                                  </label>
                               </div>
-                            </div>
-                        
-
+                          </div>
 
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Price *</label>
