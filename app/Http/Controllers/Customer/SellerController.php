@@ -51,8 +51,43 @@ class SellerController extends Controller
 
     public function dashboard()
     {
-        return view('Customer.Supplier.dashboard');
+        $sellerId = Auth::guard('customer')->user()->id;
+    
+        $ordersData = Order::whereHas('item', function ($query) use ($sellerId) {
+            $query->where('seller_ID', $sellerId);
+        })->get();
+    
+        $totalOrders = $ordersData->count();
+        $totalPrice = $ordersData->sum(function ($order) {
+            return $order->quantity * $order->item->price;
+        });
+    
+        $totalCustomers = Order::whereHas('item', function ($query) use ($sellerId) {
+            $query->where('seller_ID', $sellerId);
+        })->distinct('user_ID')->count('user_ID');
+
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now();
+        
+        $ratingsData = Review::select('item_id', DB::raw('COUNT(*) as ratings_count'))
+            ->where('seller_id', $sellerId)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('item_id')
+            ->orderBy('ratings_count', 'desc')
+            ->get();
+
+        $chartData = [
+            'labels' => $ratingsData->map(function ($review) {
+                return $review->item->name ?? 'Unknown Item'; 
+            }),
+            'values' => $ratingsData->map(function ($review) {
+                return $review->ratings_count;
+            }),
+        ];
+    
+        return view('Customer.Supplier.dashboard', compact('totalOrders', 'totalPrice', 'totalCustomers', 'ratingsData', 'chartData'));
     }
+    
 
     public function addItem()
     {

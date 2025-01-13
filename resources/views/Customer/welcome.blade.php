@@ -13,9 +13,9 @@
                             </a>
 
                             <div class="banner-content banner-content-center">
-                                <h3 class="banner-subtitle text-white"><a href="#">New Collection</a></h3><!-- End .banner-subtitle -->
-                                <h2 class="banner-title text-white"><a href="#">Shop Women's</a></h2><!-- End .banner-title -->
-                                <a href="#" class="btn underline"><span>Discover Now</span></a>
+                                <h3 class="banner-subtitle text-white"><a href="/shop/womenItems">New Collection</a></h3><!-- End .banner-subtitle -->
+                                <h2 class="banner-title text-white"><a href="/shop/womenItems">Shop Women's</a></h2><!-- End .banner-title -->
+                                <a href="/shop/womenItems" class="btn underline"><span>Discover Now</span></a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-lg-6 -->
@@ -27,9 +27,9 @@
                             </a>
 
                             <div class="banner-content banner-content-center">
-                                <h3 class="banner-subtitle text-white"><a href="#">New Collection</a></h3><!-- End .banner-subtitle -->
-                                <h2 class="banner-title text-white"><a href="#">Shop Men's</a></h2><!-- End .banner-title -->
-                                <a href="#" class="btn underline"><span>Discover Now</span></a>
+                                <h3 class="banner-subtitle text-white"><a href="/shop/menItems">New Collection</a></h3><!-- End .banner-subtitle -->
+                                <h2 class="banner-title text-white"><a href="/shop/menItems">Shop Men's</a></h2><!-- End .banner-title -->
+                                <a href="/shop/menItems" class="btn underline"><span>Discover Now</span></a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-lg-6 -->
@@ -43,9 +43,6 @@
                             </a>
 
                             <div class="banner-content banner-content-right">
-                                <h4 class="banner-subtitle"><a href="#">Flip Flop</a></h4><!-- End .banner-subtitle -->
-                                <h3 class="banner-title"><a href="#">Summer<br>sale -70% off</a></h3><!-- End .banner-title -->
-                                <a href="#" class="btn underline btn-outline-white-3 banner-link">Shop Now</a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-lg-4 -->
@@ -57,9 +54,6 @@
                             </a>
 
                             <div class="banner-content">
-                                <h4 class="banner-subtitle"><a href="#">Accessories</a></h4><!-- End .banner-subtitle -->
-                                <h3 class="banner-title"><a href="#">2019 Winter<br>up to 50% off</a></h3><!-- End .banner-title -->
-                                <a href="#" class="btn underline banner-link">Shop Now</a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-lg-4 -->
@@ -71,9 +65,6 @@
                             </a>
 
                             <div class="banner-content banner-content-right mr">
-                                <h4 class="banner-subtitle"><a href="#">New in</a></h4><!-- End .banner-subtitle -->
-                                <h3 class="banner-title"><a href="#">Women’s<br>sportswear</a></h3><!-- End .banner-title -->
-                                <a href="#" class="btn underline btn-outline-white-3 banner-link">Shop Now</a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-lg-4 -->
@@ -606,8 +597,8 @@
                             }
                         }'>
                         <blockquote class="testimonial testimonial-icon text-center">
-                            <p class="lead">“Really great store”</p><!-- End .lead -->
-                            <p>“ Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra<br>a, ultricies in, diam. Sed arcu. ”</p>
+                            <p class="lead">“Absolutely amazing experience!”</p><!-- End .lead -->
+                            <p>“ I rented a gorgeous evening gown for my friend's wedding, and I felt like a queen. The fit was perfect, and the process was so easy.<br>I'll definitely be back.”</p>
 
                             <cite>
                                 Charly Smith,

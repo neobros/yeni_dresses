@@ -21,4 +21,9 @@ class Order extends Model
         'date',    
     ];
     
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_ID', 'item_ID'); 
+    }
+
 }
